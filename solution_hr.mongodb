@@ -1,1 +1,93 @@
 
+db = db.getSiblingDB("hrDB");
+
+
+db.employees.insertOne({
+  name: "Alice Johnson",
+  department: "Management",
+  salary: 85000,
+  position: "HR Manager",
+  experience: 10
+});
+
+db.employees.insertMany([
+  { name: "Bob Smith", department: "IT", salary: 60000, position: "Developer", experience: 4 },
+  { name: "Charlie Brown", department: "IT", salary: 72000, position: "Senior Developer", experience: 7 },
+  { name: "Diana Prince", department: "Marketing", salary: 45000, position: "Intern", experience: 0 }
+]);
+
+
+
+db.employees.find();
+
+db.employees.find({ salary: { $gt: 70000 } });
+
+
+db.employees.findOne({ name: "Bob Smith" });
+
+db.employees.find(
+  { department: "IT" },
+  { name: 1, salary: 1, _id: 0 }
+);
+
+db.employees.updateOne(
+  { name: "Alice Johnson" },
+  { $set: { salary: 90000 } }
+);
+
+
+db.employees.updateMany(
+  { department: "IT" },
+  { $set: { department: "Engineering" } }
+);
+
+
+db.employees.replaceOne(
+  { name: "Diana Prince" },
+  {
+    name: "Diana Prince",
+    department: "Marketing",
+    salary: 50000,
+    position: "Associate",
+    experience: 1
+  }
+);
+
+
+
+
+db.employees.find({
+  department: { $in: ["Management", "Engineering"] }
+});
+
+// Experience & Salary Check ($and)
+db.employees.find({
+  $and: [
+    { experience: { $gt: 5 } },
+    { salary: { $gt: 70000 } }
+  ]
+});
+
+// Exclude Department ($ne Intern)
+db.employees.find({
+  position: { $ne: "Intern" }
+});
+
+
+
+db.employees.find().sort({ salary: -1 });
+
+
+db.employees.find().sort({ experience: -1 }).limit(3);
+
+
+db.employees.find({ department: "Engineering" }).sort({ salary: 1 }).limit(1);
+
+
+
+db.employees.deleteOne({ name: "Bob Smith" });
+
+
+db.employees.deleteMany({ department: "Marketing" });
+
+db.employees.deleteMany({});
